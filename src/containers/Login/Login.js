@@ -16,19 +16,6 @@ export class Login extends Component {
         }
     };
 
-    // componentDidMount() {
-    //     this.handleContextValues();
-    //
-    // }
-        // handleContextValues=()=>(
-        //         <VisibilityProvider>
-        //             <VisibilityContext.Consumer>
-        //                 (val)=>console.log(value)
-        //             </VisibilityContext.Consumer>
-        //         </VisibilityProvider>
-        //     )
-
-
     //email Validation
     validation = (e) => {
         console.log(e.target.value + "/" + this.state.errorState);
@@ -40,13 +27,12 @@ export class Login extends Component {
             this.setState({errorState: false});
 
     };
+
     handleState = () => {
         this.props.history.replace('/welcomeScreen');
     }
 
-    handleValues=(v)=>{
-        this.setState({justSignedUp:v})
-    };
+
 
     render() {
         return (
@@ -55,7 +41,7 @@ export class Login extends Component {
                 <div className="container-fluid container-fluid-login">
                     <div className="row login-wrapper">
                         <div className="loginPane col-md-4 col-sm-12">
-                            <form action="#">
+                            <form action="#" onSubmit={this.handleState}>
                                 <div className="form-group">
                                     <VisibilityContext.Consumer>
                                         {(value)=>
@@ -68,6 +54,7 @@ export class Login extends Component {
                                     <input type="email"
                                            className="inputs form-control "
                                            autoFocus
+                                           required="required"
                                            placeholder="Enter email"
                                            onChange={(e) => {
                                                this.validation(e)
@@ -81,11 +68,11 @@ export class Login extends Component {
                                     <label className="inline_label password-image">Password</label>
                                     <input className="form-control"
                                            type="password"
+                                           required="required"
                                            placeholder="Enter password"
                                     />
 
-                                <button className=" login_btn "
-                                        onClick={() => this.handleState()}>
+                                <button className=" login_btn ">
                                     Login
                                 </button>
                                 <label className="newUSer">New to this?<Link className="newUSer text-dark" exact to={'/join'}> Create an account.</Link></label>

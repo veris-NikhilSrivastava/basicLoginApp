@@ -63,11 +63,13 @@ export class NewAccount extends Component {
     }
     formValidation=(e)=>{
         e.preventDefault();
-        if(this.state.numberInPasswordError===false&&this.state.uppercaseInPasswordError===false&&this.state.passwordLengthError===false)
+        if(this.inputRef.current.value==='')
+            this.setState({emailErrorState:true})
+        if(this.state.numberInPasswordError===false&&this.state.emailErrorState===false&&this.inputRef.current.value!==''&&this.state.uppercaseInPasswordError===false&&this.state.passwordLengthError===false)
             this.props.history.replace('/')
         else {
             this.setState({passwordErrorState:true})
-           // console.log(this.input.value);
+            console.log(this.inputRef.current.value);
         }
 
     }
@@ -77,7 +79,7 @@ export class NewAccount extends Component {
             <div className="container-fluid">
                 <div className="row login-wrapper">
                     <div className="loginPane col-md-5 col-sm-12">
-                        <form  >
+                        <form onSubmit={this.formValidation} >
                             <div className="form-group">
                                 <h2 className="heading"> Create your personal account </h2>
                                 <label className="inline_label"> Username <p className="text-danger d-inline">*</p>
@@ -86,14 +88,13 @@ export class NewAccount extends Component {
                                        required="required"
                                        className=" form-control accCreationInput "
                                        autoFocus
-                                       ref={this.inputRef}
                                 />
                             </div>
 
                             <div className="form-group">
                                 <label className="inline_label">
                                     {this.state.emailErrorState ?
-                                        (<p className="text-danger errorMsg">Email address *</p>) :
+                                        (<p className=" errorMsg">Email address *</p>) :
                                         <div><p className="d-inline">Email address </p><p
                                             className="text-danger d-inline">*</p>
                                         </div>
@@ -103,13 +104,13 @@ export class NewAccount extends Component {
                                        className="form-control accCreationInput"
                                        required="required"
                                        inputRef={(ref) => {this.input = ref}}
-                                       // ref={this.inputRef}
+                                       ref={this.inputRef}
                                        onChange={(e) => {
                                            this.validationEmail(e)
                                        }}
                                 />
                                 {this.state.emailErrorState ? (
-                                    <p className="text-danger errorMsg">Please enter valid email!</p>) : null}
+                                    <p className=" errorMsg">Please enter valid email!</p>) : null}
 
                             </div>
 
@@ -119,26 +120,26 @@ export class NewAccount extends Component {
                                 <input type="password"
                                        required="required"
                                        className="form-control accCreationInput"
-                                       ref={this.inputRef}
+                                       // ref={this.inputRef}
                                        onChange={(e) => {
                                            this.validationPassword(e)
                                        }}
                                 />
                                 {this.state.passwordErrorState ? (
-                                    <p className="text-danger errorMsg">Please enter valid password!</p>) : null}
+                                    <p className=" errorMsg">Please enter valid password!</p>) : null}
 
-                                <label className="rules inline_label d-inline errorMsg">Make sure it contains
+                                <label className=" rules inline_label d-inline errorMsg">Make sure it contains
                                     {this.state.passwordLengthError ? (
-                                            <p className="rules text-danger d-inline errorMsg"> at least 8 characters</p>) :
+                                            <p className="rules  d-inline errorMsg"> at least 8 characters</p>) :
                                         <p className="rules text-white d-inline errorMsg"> at least 8 characters</p>}
                                     {this.state.numberInPasswordError ? (
-                                        <p className="rules text-danger d-inline errorMsg"> including a number </p>) : (
+                                        <p className="rules d-inline errorMsg"> including a number </p>) : (
                                         <p className="rules text-white d-inline errorMsg"> including a number </p>)} and
                                     {this.state.uppercaseInPasswordError ? (
-                                        <p className="rules text-danger d-inline errorMsg"> a uppercase letter.</p>) : (
+                                        <p className="rules  d-inline errorMsg"> a uppercase letter.</p>) : (
                                         <p className="rules text-white d-inline errorMsg"> a uppercase letter</p>)}
                                 </label>
-                                <button className=" newAcc login_btn " onClick={(e)=>this.formValidation(e)}>
+                                <button className=" newAcc login_btn " >
                                             Create an account
                                         </button>
                             </div>
