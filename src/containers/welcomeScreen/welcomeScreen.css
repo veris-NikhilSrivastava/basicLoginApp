@@ -1,0 +1,10 @@
+.displayMessage{
+    /*color: #11bbf4;*/
+    color: #ffffff;
+    font-size: 1.75rem;
+}
+.container-fluid{
+    position: absolute;
+    height: 100%;
+    background: linear-gradient(to right, #00b9d1 0%, #00436e 100%);
+}

@@ -1,0 +1,76 @@
+.container-fluid-login {
+    position: absolute;
+    height: 100%;
+    background: linear-gradient(to right, #00b9d1 0%, #00436e 100%);
+}
+.form-group.rules{
+    width:427px
+}
+.accCreationInput{
+    width: 430px!important;
+}
+.rules.inline_label.errorMsg{
+    margin-left: -4px;
+    opacity: 0.90;
+    font-size: 14px;
+    display: table;
+    font-weight: 500;
+}
+.inputs{
+    display: inline-block;
+}
+.alertClass{
+    width: 350px;
+    border-radius: 4px;
+    margin-top: 1px;
+    display: inline-block;
+}
+.heading{
+    opacity: 0.74;
+    color: #191919;
+    display: table;
+    font-weight: 500;
+    width: max-content;
+    margin-bottom: 17px;
+}
+.inline_label {
+    opacity: 0.74;
+    font-size: 14px;
+    color: #191919;
+    display: table;
+    font-weight: 600;
+}
+.errorMsg{
+    font-size: 14px;
+    display: table;
+    font-weight: 600;
+
+}
+
+.newAcc.login_btn {
+    border-radius: 6px;
+    background-color: #11bbf4;
+    border: solid 1px #1899dd;
+    color: #fff;
+    font-size: 20px !important;
+    font-weight: bold !important;
+    margin-top: 1rem;
+    height: 44px;
+    width: inherit;
+
+}
+
+.login-wrapper input {
+    height: 44px;
+    border: solid 1px rgba(0, 0, 0, 0.15);
+    width: 350px;
+    border-radius:5px;
+
+}
+
+.login-wrapper {
+    justify-content: center;
+    height: 100%;
+    align-items: center;
+}
+
