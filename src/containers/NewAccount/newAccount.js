@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
 import './newAccount.css';
 import {VisibilityProvider, VisibilityContext} from "../../App";
-
+import Input from "../../components/UI/Input/Input";
+import Button from '../../components/UI/Button/Button';
+import {inputTypes} from "../../components/UI/Input/inputTypes";
 const emailRegex = new RegExp('^(([^<>()\\[\\]\\\\.,;:\\s@]+(\\.[^<>()\\[\\]\\\\.,;:\\s@]+)*)|(.+))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$');
 //const passwordRegex = new RegExp('(?=.*\\d)(?=.*[a-zA-Z]).{8,}$');
 const numberRegex = new RegExp('[0-9]+');
@@ -9,7 +11,6 @@ const lengthRegex = new RegExp('.{8,}');
 const uppercaseRegex = new RegExp('[A-Z]+');
 
 export class NewAccount extends Component {
-    static contextType = VisibilityContext;
 
     constructor(props) {
         super(props);
@@ -18,14 +19,18 @@ export class NewAccount extends Component {
             passwordErrorState: false,
             passwordLengthError: true,
             numberInPasswordError: true,
-            uppercaseInPasswordError: true
+            uppercaseInPasswordError: true,
+            email:''
 
         }
-        this.inputRef=React.createRef();
+
+        // this.inputRef=React.createRef();
 
     };
 
     validationEmail = (e) => {
+        this.setState({email:e.target.value},()=>(console.log(this.state.email)));
+
         if (emailRegex.test(e.target.value) !== true)
             this.setState({emailErrorState: true});
         else
@@ -56,6 +61,7 @@ export class NewAccount extends Component {
 
         if (e.target.value === "")
             this.setState({
+                passwordErrorState:false,
                 passwordLengthError: true,
                 numberInPasswordError: true,
                 uppercaseInPasswordError: true
@@ -63,13 +69,12 @@ export class NewAccount extends Component {
     }
     formValidation=(e)=>{
         e.preventDefault();
-        if(this.inputRef.current.value==='')
+        if(this.state.email==='')
             this.setState({emailErrorState:true})
-        if(this.state.numberInPasswordError===false&&this.state.emailErrorState===false&&this.inputRef.current.value!==''&&this.state.uppercaseInPasswordError===false&&this.state.passwordLengthError===false)
-            this.props.history.replace('/')
+        if(this.state.numberInPasswordError===false&&this.state.emailErrorState===false&&this.state.email!==''&&this.state.uppercaseInPasswordError===false&&this.state.passwordLengthError===false)
+         this.props.history.replace('/')
         else {
             this.setState({passwordErrorState:true})
-            console.log(this.inputRef.current.value);
         }
 
     }
@@ -79,49 +84,63 @@ export class NewAccount extends Component {
             <div className="container-fluid">
                 <div className="row login-wrapper">
                     <div className="loginPane col-md-5 col-sm-12">
+                        <h2 className="heading"> Create your personal account </h2>
                         <form onSubmit={this.formValidation} >
-                            <div className="form-group">
-                                <h2 className="heading"> Create your personal account </h2>
-                                <label className="inline_label"> Username <p className="text-danger d-inline">*</p>
-                                </label>
-                                <input type="text"
-                                       required="required"
-                                       className=" form-control accCreationInput "
-                                       autoFocus
-                                />
-                            </div>
+                            {/*<div className="form-group">*/}
 
-                            <div className="form-group">
-                                <label className="inline_label">
-                                    {this.state.emailErrorState ?
-                                        (<p className=" errorMsg">Email address *</p>) :
-                                        <div><p className="d-inline">Email address </p><p
-                                            className="text-danger d-inline">*</p>
-                                        </div>
-                                    }
-                                </label>
-                                <input type="email"
-                                       className="form-control accCreationInput"
+                                {/*<label className="inline_label"> Username <p className="text-danger d-inline">*</p>*/}
+                                {/*</label>*/}
+                                <Input type={inputTypes.username.inputType}
                                        required="required"
-                                       inputRef={(ref) => {this.input = ref}}
-                                       ref={this.inputRef}
-                                       onChange={(e) => {
+                                       name={inputTypes.username.name}
+                                       labelText="Username"
+                                       labelClass={'inline_label'}
+                                       classes={inputTypes.username.classes}
+                                       autoFocus
+                                       placeholder="Set username"
+
+                                />
+                            {/*</div>*/}
+
+                            {/*/!*<div className="form-group">*!/*/}
+                                {/*<label className="inline_label">*/}
+                                    {/*{this.state.emailErrorState ?*/}
+                                        {/*(<p className=" errorMsg">Email address</p>) :*/}
+                                        {/*<div><p className="d-inline">Email address </p><p*/}
+                                            {/*className="text-danger d-inline"></p>*/}
+                                        {/*</div>*/}
+                                    {/*}*/}
+                                {/*</label>*/}
+                                <Input type={inputTypes.accCreationEmail.inputType}
+                                       classes={inputTypes.accCreationEmail.classes}
+                                       required="required"
+                                       formNoValidate
+                                       name={inputTypes.accCreationEmail.name}
+                                       labelText="Email Address"
+                                       labelClass={this.state.emailErrorState? "errorMsg":"inline_label"}
+                                       placeholder="Enter email"
+                                       ref={inputTypes.accCreationEmail.inputRef}
+                                       onchange={(e) => {
                                            this.validationEmail(e)
                                        }}
                                 />
                                 {this.state.emailErrorState ? (
                                     <p className=" errorMsg">Please enter valid email!</p>) : null}
 
-                            </div>
+                            {/*</div>*/}
 
-                            <div className="form-group rules">
-                                <label className="inline_label"> Password <p className="text-danger d-inline">*</p>
-                                </label>
-                                <input type="password"
+                            {/*<div className="form-group rules">*/}
+                                {/*<label className="inline_label"> Password <p className="text-danger d-inline">*</p>*/}
+                                {/*</label>*/}
+                                <Input type={inputTypes.accCreationPass.inputType}
                                        required="required"
-                                       className="form-control accCreationInput"
+                                       name={inputTypes.accCreationPass.name}
+                                       labelText="Password"
+                                       labelClass="inline_label"
+                                       placeholder="Set password"
+                                       classes={inputTypes.accCreationPass.classes}
                                        // ref={this.inputRef}
-                                       onChange={(e) => {
+                                       onchange={(e) => {
                                            this.validationPassword(e)
                                        }}
                                 />
@@ -130,7 +149,7 @@ export class NewAccount extends Component {
 
                                 <label className=" rules inline_label d-inline errorMsg">Make sure it contains
                                     {this.state.passwordLengthError ? (
-                                            <p className="rules  d-inline errorMsg"> at least 8 characters</p>) :
+                                            <p className="rules d-inline errorMsg"> at least 8 characters</p>) :
                                         <p className="rules text-white d-inline errorMsg"> at least 8 characters</p>}
                                     {this.state.numberInPasswordError ? (
                                         <p className="rules d-inline errorMsg"> including a number </p>) : (
@@ -139,10 +158,9 @@ export class NewAccount extends Component {
                                         <p className="rules  d-inline errorMsg"> a uppercase letter.</p>) : (
                                         <p className="rules text-white d-inline errorMsg"> a uppercase letter</p>)}
                                 </label>
-                                <button className=" newAcc login_btn " >
+                                <Button classes="newAcc login_btn " >
                                             Create an account
-                                        </button>
-                            </div>
+                                </Button>
 
                         </form>
                     </div>

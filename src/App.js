@@ -8,6 +8,7 @@ import {
     Route
 } from 'react-router-dom';
 import './App.css';
+import { withRouter } from 'react-router'
 import WelcomeScreen from "./containers/welcomeScreen/welcomeScreen";
 
 export const VisibilityContext = React.createContext(false);
@@ -44,7 +45,7 @@ export class VisibilityProvider extends React.Component {
              <div>
                  <Router basename={'/'}>
                      <div className="App">
-                         <Route exact path="/" component={Login}/>
+                         <Route exact="true" path="/" component={Login}/>
                          <Route path="/welcomeScreen" component={WelcomeScreen}/>
                          <Route path="/join" component={NewAccount}/>
                      </div>

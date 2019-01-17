@@ -64,7 +64,7 @@ input[type=text]:focus,input[type=password]:focus, input[type=email]:focus {
     font-weight: bold !important;
     margin-top: 1rem;
     height: 44px;
-    width: inherit;
+    width: 430px;
 
 }
 
