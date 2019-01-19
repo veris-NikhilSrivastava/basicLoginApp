@@ -13,27 +13,47 @@ describe('Login component tests',()=>{
 
 
 beforeEach(()=>{
-    wrapper=shallow(<Router><Login/></Router>).dive();
+    const onSearchMock = jest.fn();
+    const event = {
+        preventDefault() {},
+        target: { value: 'the-value' }
+    };
+    wrapper=shallow(<Login validation={onSearchMock} />);
 });
 
 it('renders without crashing',()=>{
     const div=document.createElement('div');
     ReactDOM.render(<Router><Login/></Router>,div);
-})
-it('tests email is valid',()=>{
-    const event = {
-        target: {
-            value: 'dummy@gmail.com'
-        }
-    };
-    wrapper.instance().validation(event);
-    expect(wrapper.state().errorState).to.equal(false);
 });
+
+// it('tests email is valid',()=>{
+//     const event = {
+//         target: {
+//             value: 'dummy@gmail.com'
+//         }
+//     };
+//     wrapper.instance().validation(event);
+//     expect(wrapper.state().errorState).to.equal(false);
+// });
+
+it('should call onChange prop', () => {
+        const onSearchMock = jest.fn();
+        const event = {
+            preventDefault() {},
+            target: { value: 'the-value' }
+        };
+        const wrapper = shallow(<Login validation={onSearchMock} />).dive();
+    //     const container = wrapper.find(styles.container)
+    //  expect(container.length).to.equal(1)
+    // container.simulate('keyup', {keyCode: 27});
+        wrapper.find('Button').simulate('change', event);
+        //expect(onSearchMock).toBeCalledWith('the-value');
+    });
+
 
 it('test submit button',()=>{
     wrapper.find('.login_btn').simulate('submit', {preventDefault(){}});
 
-})
-
+});
 
 });

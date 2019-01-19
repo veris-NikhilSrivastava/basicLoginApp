@@ -1,14 +1,21 @@
 import React, {Component} from 'react';
+import Axios from 'axios';
 import './newAccount.css';
 import {VisibilityProvider, VisibilityContext} from "../../App";
 import Input from "../../components/UI/Input/Input";
 import Button from '../../components/UI/Button/Button';
 import {inputTypes} from "../../components/UI/Input/inputTypes";
+
 const emailRegex = new RegExp('^(([^<>()\\[\\]\\\\.,;:\\s@]+(\\.[^<>()\\[\\]\\\\.,;:\\s@]+)*)|(.+))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$');
 //const passwordRegex = new RegExp('(?=.*\\d)(?=.*[a-zA-Z]).{8,}$');
 const numberRegex = new RegExp('[0-9]+');
 const lengthRegex = new RegExp('.{8,}');
 const uppercaseRegex = new RegExp('[A-Z]+');
+const signupURL=`http://192.168.5.183:5000/join`;
+const getUsersURL=`http://192.168.5.183:5000/getusers`;
+
+const axios = Axios.create({});
+
 
 export class NewAccount extends Component {
 
@@ -20,59 +27,134 @@ export class NewAccount extends Component {
             passwordLengthError: true,
             numberInPasswordError: true,
             uppercaseInPasswordError: true,
-            email:''
+            email:"",
+            username:"",
+            usernameExist:false,
+            dataSet:[]
 
         }
-
-        // this.inputRef=React.createRef();
-
     };
 
+
+    componentDidMount() {
+        axios
+            .get(getUsersURL)
+            .then(res=>{
+                switch (res.status) {
+                    case 200:
+                        this.setState({dataSet:res.data});
+                        break;
+                    default:
+                        break;
+
+                }
+            })
+    };
+
+    handleSignupAPI=()=>
+    {
+        const data={
+            username:this.state.username,
+            email:this.state.email,
+            password:this.state.password
+        };
+
+        axios
+            .post(signupURL,data)
+            .then(res=>{
+                switch (res.status) {
+                    case 201:
+                        this.setState({isLoading:false});
+                        this.props.history.replace('/login');
+                        break;
+                    default:
+                        break;
+                }
+            })
+            .catch(err=>{
+                switch (err.response.status) {
+                    case 409:
+                        this.setState({usernameExist:true})
+                        break;
+                    case 500:
+                        this.setState({internalServerError:true})
+                        break;
+                    default:
+                        break;
+                }
+            })
+    }
+
     validationEmail = (e) => {
-        this.setState({email:e.target.value},()=>(console.log(this.state.email)));
-
-        if (emailRegex.test(e.target.value) !== true)
-            this.setState({emailErrorState: true});
-        else
-            this.setState({emailErrorState: false});
-        if (e.target.value === "")
-            this.setState({emailErrorState: false});
-
+        this.setState({email:e.target.value},()=> {
+            if (emailRegex.test(this.state.email) !== true)
+                this.setState({emailErrorState: true});
+            else
+                this.setState({emailErrorState: false});
+            if (this.state.email === "")
+                this.setState({emailErrorState: false});
+        })
     };
 
     validationPassword = (e) => {
-        if (lengthRegex.test(e.target.value) !== true)//if false
-            this.setState({passwordLengthError: true});
-        else
-            this.setState({passwordLengthError: false});
-
-        if (numberRegex.test(e.target.value) !== true)
-            this.setState({numberInPasswordError: true});
-        else
-            this.setState({numberInPasswordError: false});
-
-        if (uppercaseRegex.test(e.target.value) !== true)
-            this.setState({uppercaseInPasswordError: true});
-        else
-            this.setState({uppercaseInPasswordError: false});
-
-        if(lengthRegex.test(e.target.value) === true&&numberRegex.test(e.target.value) === true&&uppercaseRegex.test(e.target.value) === true)
-            this.setState({passwordErrorState:false})
-
-        if (e.target.value === "")
+        this.setState({password: e.target.value}, () => {
             this.setState({
-                passwordErrorState:false,
-                passwordLengthError: true,
-                numberInPasswordError: true,
-                uppercaseInPasswordError: true
-            });
-    }
+                passwordErrorState:false
+            })
+            if (lengthRegex.test(this.state.password) !== true)//if false
+                this.setState({passwordLengthError: true});
+            else
+                this.setState({passwordLengthError: false});
+
+            if (numberRegex.test(this.state.password) !== true)
+                this.setState({numberInPasswordError: true});
+            else
+                this.setState({numberInPasswordError: false});
+
+            if (uppercaseRegex.test(this.state.password) !== true)
+                this.setState({uppercaseInPasswordError: true});
+            else
+                this.setState({uppercaseInPasswordError: false});
+
+            if (lengthRegex.test(this.state.password)=== true && numberRegex.test(this.state.password) === true && uppercaseRegex.test(this.state.password) === true)
+                this.setState({passwordErrorState: false})
+
+            if (this.state.password === "")
+                this.setState({
+                    passwordErrorState: false,
+                    passwordLengthError: true,
+                    numberInPasswordError: true,
+                    uppercaseInPasswordError: true
+                });
+        })
+    };
+
+    handleUsername=(e)=>{
+        this.setState({username:e.target.value},()=>{
+            this.setState({
+                usernameError:false,
+                usernameExist:false
+            })
+            if(this.state.username==="")
+                this.setState({
+                    usernameError:false,
+                    usernameExist:false
+                })
+            this.state.dataSet.usernames.map((item)=> {
+                if(this.state.username === item)
+                    this.setState({usernameExist: true})
+            })
+        });
+    };
+
     formValidation=(e)=>{
         e.preventDefault();
         if(this.state.email==='')
             this.setState({emailErrorState:true})
+        if(this.state.username==='')
+            this.setState({usernameError:true});
         if(this.state.numberInPasswordError===false&&this.state.emailErrorState===false&&this.state.email!==''&&this.state.uppercaseInPasswordError===false&&this.state.passwordLengthError===false)
-         this.props.history.replace('/')
+         this.handleSignupAPI();
         else {
             this.setState({passwordErrorState:true})
         }
@@ -86,31 +168,25 @@ export class NewAccount extends Component {
                     <div className="loginPane col-md-5 col-sm-12">
                         <h2 className="heading"> Create your personal account </h2>
                         <form onSubmit={this.formValidation} >
-                            {/*<div className="form-group">*/}
-
-                                {/*<label className="inline_label"> Username <p className="text-danger d-inline">*</p>*/}
-                                {/*</label>*/}
                                 <Input type={inputTypes.username.inputType}
                                        required="required"
                                        name={inputTypes.username.name}
                                        labelText="Username"
                                        labelClass={'inline_label'}
                                        classes={inputTypes.username.classes}
-                                       autoFocus
+                                       autofocus
+                                       onchange={(e)=>{
+                                           this.handleUsername(e)
+                                       }}
                                        placeholder="Set username"
-
                                 />
-                            {/*</div>*/}
+                            {this.state.usernameExist?
+                                (<div className="usernameSearchLoader d-inline"></div>):null}
+                            {this.state.usernameError ? (
+                                <p className=" errorMsg">Please enter a username!</p>) : null}
+                            {this.state.usernameExist ? (
+                                <p className=" errorMsg">Username already exists</p>) : null}
 
-                            {/*/!*<div className="form-group">*!/*/}
-                                {/*<label className="inline_label">*/}
-                                    {/*{this.state.emailErrorState ?*/}
-                                        {/*(<p className=" errorMsg">Email address</p>) :*/}
-                                        {/*<div><p className="d-inline">Email address </p><p*/}
-                                            {/*className="text-danger d-inline"></p>*/}
-                                        {/*</div>*/}
-                                    {/*}*/}
-                                {/*</label>*/}
                                 <Input type={inputTypes.accCreationEmail.inputType}
                                        classes={inputTypes.accCreationEmail.classes}
                                        required="required"
@@ -124,14 +200,8 @@ export class NewAccount extends Component {
                                            this.validationEmail(e)
                                        }}
                                 />
-                                {this.state.emailErrorState ? (
-                                    <p className=" errorMsg">Please enter valid email!</p>) : null}
-
-                            {/*</div>*/}
-
-                            {/*<div className="form-group rules">*/}
-                                {/*<label className="inline_label"> Password <p className="text-danger d-inline">*</p>*/}
-                                {/*</label>*/}
+                            {this.state.emailErrorState? (
+                                <p className=" errorMsg">Please enter a valid email!</p>) : null}
                                 <Input type={inputTypes.accCreationPass.inputType}
                                        required="required"
                                        name={inputTypes.accCreationPass.name}
@@ -139,7 +209,6 @@ export class NewAccount extends Component {
                                        labelClass="inline_label"
                                        placeholder="Set password"
                                        classes={inputTypes.accCreationPass.classes}
-                                       // ref={this.inputRef}
                                        onchange={(e) => {
                                            this.validationPassword(e)
                                        }}

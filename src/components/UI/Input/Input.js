@@ -12,7 +12,7 @@ export class Input extends Component{
                 inputElement = <input
                     className={this.props.classes}
                     type={this.props.type}
-                    autofocus
+                    autofocus={true}
                     name={this.props.name}
                     formNoValidate
                     ref={this.props.ref}

@@ -6,16 +6,25 @@ export class WelcomeScreen extends Component {
         super(props);
         this.state={
             email:"",
-            errorState:false
+            errorState:false,
+            isLoading:true
         }
     };
+    componentDidMount() {
+        setTimeout(()=>{this.setState({isLoading:false})},500);
+    }
 
 
     render() {
+
         return (
             <div className="container-fluid">
                 <p className=" displayMessage">Hey! Congratulations you've completed your first Veris Assignment!</p>
+                {this.state.isLoading ? (
+                    <div className="preloader"></div>
+                ) : null}
             </div>
+
         );
     }
 }
