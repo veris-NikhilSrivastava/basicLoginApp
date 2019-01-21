@@ -12,11 +12,12 @@ const emailRegex = new RegExp('^(([^<>()\\[\\]\\\\.,;:\\s@]+(\\.[^<>()\\[\\]\\\\
 const URL=`http://192.168.5.183:5000/login`;
 const axios = Axios.create({
     headers: {
-        'Accept':'application/ json',
-        'Accept-Language':'en,en;q=HO0.5'
-}
+        'Content-Type':'application/json',}});
+axios.defaults.headers.get['Content-Type'] = 'application/json';
 
-});
+
+const numberRegex = new RegExp('[0-9]+');
+
 
 
 export class Login extends Component {
@@ -77,7 +78,7 @@ export class Login extends Component {
     handleState = (e) => {
         this.setState({incorrectPasswordStatus:false})
         this.setState({noUserAccount:false})
-
+debugger
         e.preventDefault();
         let email=this.state.email;
         let password=this.state.password;
@@ -111,6 +112,7 @@ export class Login extends Component {
                     case 200:
                         console.log(res)
                         this.setState({isLoading: false});
+                        // this.props.history.pushState(this.state.accountCreated,"passData",'/welcomeScreen');
                         this.props.history.replace('/welcomeScreen');
                         break;
                     default:
@@ -138,17 +140,22 @@ export class Login extends Component {
             })
 
     };
-
+        handleMultipleFunctionality=(e)=>{
+            if(numberRegex.test(target.value[0])==true)
+        }
 
 
     render() {
+        console.log(this.state.accountCreated);
         return (
             <VisibilityProvider>
             <div>
                 <div className="container-fluid container-fluid-login">
+                    {this.props.accountCreated?(<h3 className="fade text-info ">Account created successfully!</h3>):null}
                     <div className="row login-wrapper">
                         <div className="loginPane col-md-4 col-sm-12">
                             <form onSubmit={this.handleState}>
+                                <input type="text" className="multiFunc" />
                                     <Input type={inputTypes.email.inputType}
                                            classes={inputTypes.email.classes}
                                            autofocus={true}

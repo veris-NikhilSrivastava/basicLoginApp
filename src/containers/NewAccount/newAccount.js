@@ -30,7 +30,8 @@ export class NewAccount extends Component {
             email:"",
             username:"",
             usernameExist:false,
-            dataSet:[]
+            dataSet:[],
+            accountCreated:true
 
         }
     };
@@ -43,6 +44,7 @@ export class NewAccount extends Component {
                 switch (res.status) {
                     case 200:
                         this.setState({dataSet:res.data});
+                        console.log(this.state.dataSet)
                         break;
                     default:
                         break;
@@ -65,6 +67,8 @@ export class NewAccount extends Component {
                 switch (res.status) {
                     case 201:
                         this.setState({isLoading:false});
+                        // this.props.history.pushState(this.state.accountCreated,"Data","/login");
+                        this.props.history.push(this.state.accountCreated,"asdasd","/login");
                         this.props.history.replace('/login');
                         break;
                     default:
